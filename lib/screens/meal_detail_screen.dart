@@ -31,62 +31,69 @@ class MealDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String id = ModalRoute.of(context).settings.arguments;
-    final selectedMeal = DUMMY_MEALS.firstWhere((meal) => meal.id == id);
+    final String mealId = ModalRoute.of(context).settings.arguments;
+    final selectedMeal = DUMMY_MEALS.firstWhere((meal) => meal.id == mealId);
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            '${selectedMeal.title}',
-            overflow: TextOverflow.fade,
-          ),
+      appBar: AppBar(
+        title: Text(
+          '${selectedMeal.title}',
+          overflow: TextOverflow.fade,
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                height: 300,
-                width: double.infinity,
-                child: Image.network(
-                  selectedMeal.imageUrl,
-                  fit: BoxFit.cover,
-                ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              height: 300,
+              width: double.infinity,
+              child: Image.network(
+                selectedMeal.imageUrl,
+                fit: BoxFit.cover,
               ),
-              buildSectionTitle('Ingredients', context),
-              buildContainer(
-                ListView.builder(
-                  itemCount: selectedMeal.ingredients.length,
-                  itemBuilder: (ctx, index) {
-                    return Card(
-                      color: Theme.of(context).accentColor,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 10),
-                        child: Text(selectedMeal.ingredients[index]),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              buildSectionTitle('Steps', context),
-              buildContainer(ListView.builder(
-                itemCount: selectedMeal.steps.length,
+            ),
+            buildSectionTitle('Ingredients', context),
+            buildContainer(
+              ListView.builder(
+                itemCount: selectedMeal.ingredients.length,
                 itemBuilder: (ctx, index) {
-                  return Column(
-                    children: [
-                      ListTile(
-                        leading: CircleAvatar(
-                          child: Text('# ${index + 1}'),
-                        ),
-                        title: Text('${selectedMeal.steps[index]}'),
-                      ),
-                      Divider()
-                    ],
+                  return Card(
+                    color: Theme.of(context).accentColor,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 10),
+                      child: Text(selectedMeal.ingredients[index]),
+                    ),
                   );
                 },
-              ))
-            ],
-          ),
-        ));
+              ),
+            ),
+            buildSectionTitle('Steps', context),
+            buildContainer(ListView.builder(
+              itemCount: selectedMeal.steps.length,
+              itemBuilder: (ctx, index) {
+                return Column(
+                  children: [
+                    ListTile(
+                      leading: CircleAvatar(
+                        child: Text('# ${index + 1}'),
+                      ),
+                      title: Text('${selectedMeal.steps[index]}'),
+                    ),
+                    Divider()
+                  ],
+                );
+              },
+            ))
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){
+          Navigator.of(context).pop(mealId);
+        },
+        child: Icon(Icons.delete),
+      ),
+    );
   }
 }
