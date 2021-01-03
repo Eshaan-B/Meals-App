@@ -22,6 +22,28 @@ class _MyAppState extends State<MyApp> {
     'vegetarian': false,
   };
   List<Meal> availableMeals = DUMMY_MEALS.toList();
+  List<Meal> favouriteMeals = [];
+
+  void _toggleFavourite(String mealId) {
+
+    final existingIndex =
+        favouriteMeals.indexWhere((meal) => meal.id == mealId);
+    setState(() {
+      if (existingIndex >= 0) {
+        setState(() {
+          favouriteMeals.removeAt(existingIndex);
+        });
+      } else {
+        favouriteMeals.add(DUMMY_MEALS.firstWhere((meal) => meal.id == mealId));
+      }
+    });
+
+  }
+
+  bool _isMealFavourite(mealId){
+
+    return favouriteMeals.any((meal) => meal.id==mealId);
+  }
 
   void _setFilters(Map<String, bool> filterData) {
     setState(() {
@@ -71,10 +93,13 @@ class _MyAppState extends State<MyApp> {
       ),
       title: 'Fapp',
       routes: {
-        '/': (ctx) => TabsScreen(),
+        '/': (ctx) => TabsScreen(
+              favouriteMeals: favouriteMeals,
+              toggleFavourite: _toggleFavourite,
+            ),
         CategoryMealsScreen.routeName: (ctx) =>
             CategoryMealsScreen(availableMeals: availableMeals),
-        MealDetailScreen.routeName: (ctx) => MealDetailScreen(),
+        MealDetailScreen.routeName: (ctx) => MealDetailScreen(toggleFav: _toggleFavourite,isFav: _isMealFavourite,),
         FiltersScreen.routeName: (ctx) => FiltersScreen(
               saveFilters: _setFilters,
               currentFilters: _filters,
